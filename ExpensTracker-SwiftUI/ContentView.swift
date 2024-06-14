@@ -6,8 +6,13 @@
 //
 
 import SwiftUI
+import SwiftUICharts
 
 struct ContentView: View {
+    @EnvironmentObject var transactionListVM: TransactionListViewModel
+    // temporary data set
+    //var demoData: [Double] = [8, 2, 4, 6, 12, 9, 2]
+    
     var body: some View {
         NavigationView {
             ScrollView{
@@ -17,6 +22,26 @@ struct ContentView: View {
                         .font(.title2)
                         .bold()
                     
+                    //MARK: Chart
+                    let data = transactionListVM.accumulateTransactions()
+                    // add logic to check if the data is not empty before even displaying the chart
+                    if !data.isEmpty {
+                        let totalExpenses = data.last?.1 ?? 0
+                        
+                        CardView {
+                            VStack(alignment: .leading) {
+                                // ChartLabel("$900", type: .title)
+                                ChartLabel(totalExpenses.formatted(.currency(code: "USD")), type: .title, format: "$%.02")
+                                
+                                LineChart() // the line chart shows a history of cumulative total expenses per day within the current month
+                            }
+                            .background(Color.customSystemBackground)
+                        }
+                        //.data(demoData) // item requires double or tupple. check the data
+                        .data(data)
+                        .chartStyle(ChartStyle(backgroundColor: Color.customSystemBackground, foregroundColor: ColorGradient(Color.customIcon.opacity(0.4), Color.customIcon))).frame(height: 300)
+                    }
+                    
                     //MARK: Transaction List
                     RecentTransactionList()
                 }
@@ -25,7 +50,7 @@ struct ContentView: View {
                     
                     
             }
-            .background(Color.background)
+            .background(Color.customBackground)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 //MARK: Notification Icon
@@ -37,6 +62,7 @@ struct ContentView: View {
             }
         }
         .navigationViewStyle(.stack)
+        .accentColor(.primary)
     }
 }
 
