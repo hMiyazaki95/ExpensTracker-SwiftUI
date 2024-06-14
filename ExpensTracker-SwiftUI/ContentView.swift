@@ -31,7 +31,7 @@ struct ContentView: View {
                         CardView {
                             VStack(alignment: .leading) {
                                 // ChartLabel("$900", type: .title)
-                                ChartLabel(totalExpenses.formatted(.currency(code: "USD")), type: .title, format: "$%.02")
+                                ChartLabel(totalExpenses.formatted(.currency(code: "USD")), type: .title, format: "$%.02f")
                                 
                                 LineChart() // the line chart shows a history of cumulative total expenses per day within the current month
                             }
